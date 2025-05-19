@@ -5,6 +5,15 @@ const bcrypt = require("bcrypt")
 const jwt = require("jsonwebtoken")
 require("dotenv").config()
 
+// Importar modelos
+const User = require("./models/User")
+const Livro = require("./models/Livro")
+const ProgressoLeitura = require("./models/ProgressoLeitura")
+
+// Importar rotas
+const livroRoutes = require("./routes/livroRoutes")
+const progressoRoutes = require("./routes/progressoRoutes")
+
 const app = express()
 const PORT = process.env.PORT || 5000
 
@@ -20,16 +29,6 @@ mongoose
   })
   .then(() => console.log("Conectado ao MongoDB"))
   .catch((err) => console.error("Erro ao conectar ao MongoDB:", err))
-
-// Modelo de Usuário
-const userSchema = new mongoose.Schema({
-  name: { type: String, required: true },
-  email: { type: String, required: true, unique: true },
-  password: { type: String, required: true },
-  createdAt: { type: Date, default: Date.now },
-})
-
-const User = mongoose.model("User", userSchema)
 
 // Middleware para verificar JWT
 const authenticateToken = (req, res, next) => {
@@ -143,6 +142,10 @@ app.get("/api/user/profile", authenticateToken, async (req, res) => {
     res.status(500).json({ message: "Erro ao buscar perfil do usuário" })
   }
 })
+
+// Usar rotas de livros e progresso
+app.use("/api/livros", livroRoutes)
+app.use("/api/progresso", progressoRoutes)
 
 // Iniciar o servidor
 app.listen(PORT, () => {

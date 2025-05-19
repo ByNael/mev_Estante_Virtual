@@ -1,16 +1,27 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { useNavigate } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import axios from "axios"
 
-function Dashboard({ setIsAuthenticated }) {
+function Dashboard() {
   const [user, setUser] = useState(null)
   const [loading, setLoading] = useState(true)
+  const [estatisticas, setEstatisticas] = useState({
+    totalLivros: 0,
+    statusLeitura: {
+      naoIniciado: 0,
+      emAndamento: 0,
+      concluido: 0,
+      abandonado: 0,
+    },
+    totalPaginasLidas: 0,
+  })
+  const [livrosRecentes, setLivrosRecentes] = useState([])
   const navigate = useNavigate()
 
   useEffect(() => {
-    const fetchUserData = async () => {
+    const fetchData = async () => {
       const token = localStorage.getItem("token")
 
       if (!token) {
@@ -19,32 +30,38 @@ function Dashboard({ setIsAuthenticated }) {
       }
 
       try {
-        const response = await axios.get("http://localhost:5000/api/user/profile", {
+        // Buscar dados do usuário
+        const userResponse = await axios.get("http://localhost:5000/api/user/profile", {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         })
 
-        setUser(response.data)
+        setUser(userResponse.data)
+
+        // Buscar estatísticas
+        const estatisticasResponse = await axios.get("http://localhost:5000/api/progresso/estatisticas", {
+          headers: { Authorization: `Bearer ${token}` },
+        })
+
+        setEstatisticas(estatisticasResponse.data)
+
+        // Buscar livros recentes
+        const livrosResponse = await axios.get("http://localhost:5000/api/livros", {
+          headers: { Authorization: `Bearer ${token}` },
+        })
+
+        // Pegar apenas os 3 livros mais recentes
+        setLivrosRecentes(livrosResponse.data.slice(0, 3))
       } catch (error) {
-        console.error("Erro ao buscar dados do usuário:", error)
-        // Se o token for inválido, redirecionar para login
-        if (error.response?.status === 401) {
-          handleLogout()
-        }
+        console.error("Erro ao buscar dados:", error)
       } finally {
         setLoading(false)
       }
     }
 
-    fetchUserData()
-  }, [navigate])
-
-  const handleLogout = () => {
-    localStorage.removeItem("token")
-    setIsAuthenticated(false)
-    navigate("/login")
-  }
+    fetchData()
+  }, [])
 
   if (loading) {
     return (
@@ -55,44 +72,133 @@ function Dashboard({ setIsAuthenticated }) {
   }
 
   return (
-    <div className="min-h-screen bg-gray-100">
-      <nav className="bg-white shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between h-16">
-            <div className="flex items-center">
-              <h1 className="text-xl font-bold text-gray-800">Minha Estante Virtual</h1>
-            </div>
-            <div className="flex items-center">
-              <button
-                onClick={handleLogout}
-                className="ml-4 px-4 py-2 text-sm text-white bg-red-600 rounded-md hover:bg-red-700"
-              >
-                Sair
-              </button>
-            </div>
-          </div>
-        </div>
-      </nav>
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <div className="mb-8">
+        <h1 className="text-3xl font-bold text-gray-900">Olá, {user?.name}!</h1>
+        <p className="mt-1 text-gray-600">Bem-vindo à sua Estante Virtual. Acompanhe seu progresso de leitura.</p>
+      </div>
 
-      <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
-        <div className="px-4 py-6 sm:px-0">
-          <div className="bg-white shadow rounded-lg p-6">
-            <h2 className="text-2xl font-bold mb-4">Bem-vindo, {user?.name}!</h2>
-            <p className="text-gray-600">
-              Este é o seu painel da Minha Estante Virtual. Aqui você poderá gerenciar seus livros e preferências.
-            </p>
-            <div className="mt-6">
-              <h3 className="text-lg font-medium">Seus dados:</h3>
-              <p className="mt-2">
-                <strong>Nome:</strong> {user?.name}
-              </p>
-              <p>
-                <strong>Email:</strong> {user?.email}
-              </p>
-            </div>
+      {/* Estatísticas */}
+      <div className="mb-8">
+        <h2 className="text-xl font-semibold mb-4">Resumo da Sua Leitura</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="bg-white p-6 rounded-lg shadow-md border border-gray-200">
+            <h3 className="text-sm font-medium text-gray-500">Total de Livros</h3>
+            <p className="text-3xl font-bold">{estatisticas.totalLivros}</p>
+          </div>
+
+          <div className="bg-white p-6 rounded-lg shadow-md border border-gray-200">
+            <h3 className="text-sm font-medium text-gray-500">Em Andamento</h3>
+            <p className="text-3xl font-bold text-blue-600">{estatisticas.statusLeitura.emAndamento}</p>
+          </div>
+
+          <div className="bg-white p-6 rounded-lg shadow-md border border-gray-200">
+            <h3 className="text-sm font-medium text-gray-500">Concluídos</h3>
+            <p className="text-3xl font-bold text-green-600">{estatisticas.statusLeitura.concluido}</p>
+          </div>
+
+          <div className="bg-white p-6 rounded-lg shadow-md border border-gray-200">
+            <h3 className="text-sm font-medium text-gray-500">Páginas Lidas</h3>
+            <p className="text-3xl font-bold text-purple-600">{estatisticas.totalPaginasLidas}</p>
           </div>
         </div>
-      </main>
+      </div>
+
+      {/* Livros Recentes */}
+      <div className="mb-8">
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-xl font-semibold">Livros Recentes</h2>
+          <Link to="/livros" className="text-blue-600 hover:text-blue-800 text-sm font-medium">
+            Ver todos
+          </Link>
+        </div>
+
+        {livrosRecentes.length === 0 ? (
+          <div className="bg-white p-6 rounded-lg shadow-md border border-gray-200 text-center">
+            <p className="text-gray-500">Você ainda não adicionou nenhum livro.</p>
+            <Link
+              to="/livros/novo"
+              className="mt-4 inline-block px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+            >
+              Adicionar Livro
+            </Link>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {livrosRecentes.map((livro) => (
+              <div key={livro._id} className="bg-white rounded-lg shadow-md overflow-hidden border border-gray-200">
+                <div className="flex h-40">
+                  <div className="w-1/3 bg-gray-200">
+                    <img
+                      src={livro.capa || "https://via.placeholder.com/150?text=Sem+Capa"}
+                      alt={`Capa de ${livro.titulo}`}
+                      className="h-full w-full object-cover"
+                      onError={(e) => {
+                        e.target.onerror = null
+                        e.target.src = "https://via.placeholder.com/150?text=Sem+Capa"
+                      }}
+                    />
+                  </div>
+                  <div className="w-2/3 p-4">
+                    <h3 className="font-bold text-lg mb-1 truncate" title={livro.titulo}>
+                      {livro.titulo}
+                    </h3>
+                    <p className="text-gray-600 text-sm mb-2" title={livro.autor}>
+                      {livro.autor}
+                    </p>
+                    <p className="text-gray-500 text-xs mb-2">
+                      {livro.genero} • {livro.anoPublicacao}
+                    </p>
+                    <span
+                      className={`inline-block px-2 py-1 text-xs rounded-full ${
+                        livro.statusLeitura === "Não iniciado"
+                          ? "bg-gray-200 text-gray-800"
+                          : livro.statusLeitura === "Em andamento"
+                            ? "bg-blue-200 text-blue-800"
+                            : livro.statusLeitura === "Concluído"
+                              ? "bg-green-200 text-green-800"
+                              : "bg-red-200 text-red-800"
+                      }`}
+                    >
+                      {livro.statusLeitura}
+                    </span>
+                  </div>
+                </div>
+                <div className="border-t border-gray-200 bg-gray-50 px-4 py-3 flex justify-between">
+                  <Link
+                    to={`/progresso/${livro._id}`}
+                    className="text-blue-600 hover:text-blue-800 text-sm font-medium"
+                  >
+                    Atualizar Progresso
+                  </Link>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* Links Rápidos */}
+      <div>
+        <h2 className="text-xl font-semibold mb-4">Ações Rápidas</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <Link
+            to="/livros/novo"
+            className="bg-white p-6 rounded-lg shadow-md border border-gray-200 hover:border-blue-500 transition-colors"
+          >
+            <h3 className="font-bold text-lg mb-2">Adicionar Novo Livro</h3>
+            <p className="text-gray-600">Cadastre um novo livro na sua estante virtual.</p>
+          </Link>
+
+          <Link
+            to="/progresso"
+            className="bg-white p-6 rounded-lg shadow-md border border-gray-200 hover:border-blue-500 transition-colors"
+          >
+            <h3 className="font-bold text-lg mb-2">Ver Progresso de Leitura</h3>
+            <p className="text-gray-600">Acompanhe seu progresso em todos os livros.</p>
+          </Link>
+        </div>
+      </div>
     </div>
   )
 }
