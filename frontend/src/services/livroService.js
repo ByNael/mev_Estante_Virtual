@@ -1,0 +1,24 @@
+const API_URL = 'http://localhost:3000/api';
+
+export const livroService = {
+    async atualizarStatusLivro(livroId, novoStatus) {
+        try {
+            const response = await fetch(`${API_URL}/livros/${livroId}/status`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ novoStatus }),
+            });
+
+            if (!response.ok) {
+                throw new Error('Erro ao atualizar status do livro');
+            }
+
+            return await response.json();
+        } catch (error) {
+            console.error('Erro no serviço:', error);
+            throw error;
+        }
+    }
+}; 

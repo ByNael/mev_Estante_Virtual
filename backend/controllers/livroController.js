@@ -1,175 +1,88 @@
-const Livro = require("../models/Livro")
-const ProgressoLeitura = require("../models/ProgressoLeitura")
+const livroService = require("../services/LivroService")
+const errorHandler = require("../utils/errorHandler")
+const Livro = require('../models/Livro');
+const { EstadoEmLeitura, EstadoConcluido } = require('../models/EstadoLivro');
 
-// @desc    Obter todos os livros do usuário
-// @route   GET /api/livros
-// @access  Private
 exports.getLivros = async (req, res) => {
   try {
-    const livros = await Livro.find({ usuarioId: req.user.id }).sort({ dataCadastro: -1 })
+    const livros = await livroService.listarLivrosPorUsuario(req.user.id)
     res.json(livros)
   } catch (error) {
-    console.error("Erro ao buscar livros:", error)
-    res.status(500).json({ message: "Erro ao buscar livros" })
+    errorHandler(res, error, "Erro ao buscar livros")
   }
 }
 
-// @desc    Obter um livro específico
-// @route   GET /api/livros/:id
-// @access  Private
 exports.getLivro = async (req, res) => {
   try {
-    const livro = await Livro.findById(req.params.id)
-
-    // Verificar se o livro existe
-    if (!livro) {
-      return res.status(404).json({ message: "Livro não encontrado" })
-    }
-
-    // Verificar se o livro pertence ao usuário
-    if (livro.usuarioId.toString() !== req.user.id) {
-      return res.status(403).json({ message: "Acesso negado" })
-    }
-
+    const livro = await livroService.buscarLivroPorId(req.params.id, req.user.id)
     res.json(livro)
   } catch (error) {
-    console.error("Erro ao buscar livro:", error)
-    res.status(500).json({ message: "Erro ao buscar livro" })
+    errorHandler(res, error, "Erro ao buscar livro")
   }
 }
 
-// @desc    Criar um novo livro
-// @route   POST /api/livros
-// @access  Private
 exports.criarLivro = async (req, res) => {
   try {
-    const { titulo, autor, genero, anoPublicacao, statusLeitura, descricao, capa, totalPaginas } = req.body
-
-    // Criar o livro
-    const novoLivro = new Livro({
-      titulo,
-      autor,
-      genero,
-      anoPublicacao,
-      statusLeitura,
-      descricao,
-      capa,
-      usuarioId: req.user.id,
-    })
-
-    const livroSalvo = await novoLivro.save()
-
-    // Criar um progresso inicial se o total de páginas for fornecido
-    if (totalPaginas) {
-      const novoProgresso = new ProgressoLeitura({
-        livroId: livroSalvo._id,
-        usuarioId: req.user.id,
-        paginaAtual: 0,
-        totalPaginas,
-        comentario: "Progresso inicial",
-        dataAtualizacao: Date.now(),
-      })
-
-      await novoProgresso.save()
-    }
-
-    res.status(201).json(livroSalvo)
+    const livroCriado = await livroService.criarLivro(req.body, req.user.id)
+    res.status(201).json(livroCriado)
   } catch (error) {
-    console.error("Erro ao criar livro:", error)
-    res.status(500).json({ message: "Erro ao criar livro", error: error.message })
+    errorHandler(res, error, "Erro ao criar livro")
   }
 }
 
-// @desc    Atualizar um livro
-// @route   PUT /api/livros/:id
-// @access  Private
 exports.atualizarLivro = async (req, res) => {
   try {
-    const { titulo, autor, genero, anoPublicacao, statusLeitura, descricao, capa } = req.body
-
-    // Verificar se o livro existe
-    let livro = await Livro.findById(req.params.id)
-
-    if (!livro) {
-      return res.status(404).json({ message: "Livro não encontrado" })
-    }
-
-    // Verificar se o livro pertence ao usuário
-    if (livro.usuarioId.toString() !== req.user.id) {
-      return res.status(403).json({ message: "Acesso negado" })
-    }
-
-    // Atualizar o livro
-    livro = await Livro.findByIdAndUpdate(
-      req.params.id,
-      {
-        titulo,
-        autor,
-        genero,
-        anoPublicacao,
-        statusLeitura,
-        descricao,
-        capa,
-      },
-      { new: true, runValidators: true },
-    )
-
-    res.json(livro)
+    const livroAtualizado = await livroService.atualizarLivro(req.params.id, req.body, req.user.id)
+    res.json(livroAtualizado)
   } catch (error) {
-    console.error("Erro ao atualizar livro:", error)
-    res.status(500).json({ message: "Erro ao atualizar livro", error: error.message })
+    errorHandler(res, error, "Erro ao atualizar livro")
   }
 }
 
-// @desc    Excluir um livro
-// @route   DELETE /api/livros/:id
-// @access  Private
 exports.excluirLivro = async (req, res) => {
   try {
-    // Verificar se o livro existe
-    const livro = await Livro.findById(req.params.id)
-
-    if (!livro) {
-      return res.status(404).json({ message: "Livro não encontrado" })
-    }
-
-    // Verificar se o livro pertence ao usuário
-    if (livro.usuarioId.toString() !== req.user.id) {
-      return res.status(403).json({ message: "Acesso negado" })
-    }
-
-    // Excluir o progresso de leitura associado
-    await ProgressoLeitura.deleteMany({ livroId: req.params.id })
-
-    // Excluir o livro
-    await Livro.findByIdAndDelete(req.params.id)
-
+    await livroService.excluirLivro(req.params.id, req.user.id)
     res.json({ message: "Livro excluído com sucesso" })
   } catch (error) {
-    console.error("Erro ao excluir livro:", error)
-    res.status(500).json({ message: "Erro ao excluir livro" })
+    errorHandler(res, error, "Erro ao excluir livro")
   }
 }
 
-// @desc    Buscar livros por título ou autor
-// @route   GET /api/livros/busca
-// @access  Private
 exports.buscarLivros = async (req, res) => {
   try {
-    const { termo } = req.query
-
-    if (!termo) {
-      return res.status(400).json({ message: "Termo de busca é obrigatório" })
-    }
-
-    const livros = await Livro.find({
-      usuarioId: req.user.id,
-      $or: [{ titulo: { $regex: termo, $options: "i" } }, { autor: { $regex: termo, $options: "i" } }],
-    }).sort({ dataCadastro: -1 })
-
+    const livros = await livroService.buscarLivrosPorTermo(req.query.termo, req.user.id)
     res.json(livros)
   } catch (error) {
-    console.error("Erro ao buscar livros:", error)
-    res.status(500).json({ message: "Erro ao buscar livros" })
+    errorHandler(res, error, "Erro ao buscar livros")
   }
 }
+
+exports.atualizarStatus = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { novoStatus } = req.body;
+
+        const livro = await Livro.findById(id);
+        if (!livro) {
+            return res.status(404).json({ message: 'Livro não encontrado' });
+        }
+
+        switch (novoStatus) {
+            case 'em_leitura':
+                livro.setEstado(new EstadoEmLeitura());
+                break;
+            case 'concluido':
+                livro.setEstado(new EstadoConcluido());
+                break;
+            default:
+                return res.status(400).json({ message: 'Status inválido' });
+        }
+
+        livro.atualizar();
+        await livro.save();
+
+        res.json(livro);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};

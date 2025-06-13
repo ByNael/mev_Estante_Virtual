@@ -1,4 +1,5 @@
 const mongoose = require("mongoose")
+const { EstadoNaoIniciado } = require('./EstadoLivro')
 
 const LivroSchema = new mongoose.Schema(
   {
@@ -52,6 +53,8 @@ const LivroSchema = new mongoose.Schema(
       type: Date,
       default: Date.now,
     },
+    status: { type: String, default: 'nao_iniciado' },
+    dataAtualizacao: { type: Date, default: Date.now },
   },
   {
     timestamps: true,
@@ -62,4 +65,22 @@ const LivroSchema = new mongoose.Schema(
 LivroSchema.index({ usuarioId: 1 })
 LivroSchema.index({ titulo: "text", autor: "text" })
 
-module.exports = mongoose.model("Livro", LivroSchema)
+class Livro extends mongoose.Model {
+  constructor() {
+    super()
+    this.estado = new EstadoNaoIniciado()
+  }
+
+  setEstado(estado) {
+    this.estado = estado
+  }
+
+  atualizar() {
+    this.estado.atualizar(this)
+  }
+}
+
+LivroSchema.loadClass(Livro)
+const LivroModel = mongoose.model("Livro", LivroSchema)
+
+module.exports = LivroModel
