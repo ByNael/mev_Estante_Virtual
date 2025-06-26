@@ -13,6 +13,5 @@ router.get("/:id", livroController.getLivro)
 router.post("/", livroController.criarLivro)
 router.put("/:id", livroController.atualizarLivro)
 router.delete("/:id", livroController.excluirLivro)
-router.patch("/:id/status", livroController.atualizarStatus)
 
 module.exports = router
