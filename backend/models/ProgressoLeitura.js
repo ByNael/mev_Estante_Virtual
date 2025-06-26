@@ -42,6 +42,12 @@ const ProgressoLeituraSchema = new mongoose.Schema(
       enum: ['quero_ler', 'em_leitura', 'concluido'],
       default: 'quero_ler',
     },
+    avaliacao: {
+      type: Number,
+      min: 1,
+      max: 5,
+      default: null,
+    },
   },
   {
     timestamps: true,

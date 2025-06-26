@@ -212,6 +212,39 @@ const ProgressoForm = () => {
           ></textarea>
         </div>
 
+        {progresso.statusLeitura === 'concluido' && (
+          <div>
+            <label htmlFor="avaliacao" className="block text-sm font-medium text-gray-700">
+              Avaliação (1 a 5)
+            </label>
+            <select
+              id="avaliacao"
+              name="avaliacao"
+              value={progresso.avaliacao || ''}
+              onChange={async (e) => {
+                const nota = Number(e.target.value);
+                if (nota >= 1 && nota <= 5) {
+                  try {
+                    const token = localStorage.getItem('token');
+                    await axios.patch(`http://localhost:5000/api/progresso/${progresso._id}/avaliacao`, { avaliacao: nota }, {
+                      headers: { Authorization: `Bearer ${token}` },
+                    });
+                    setProgresso((prev) => ({ ...prev, avaliacao: nota }));
+                  } catch (err) {
+                    setError('Erro ao salvar avaliação!');
+                  }
+                }
+              }}
+              className="mt-1 block w-32 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+            >
+              <option value="">Selecione</option>
+              {[1,2,3,4,5].map((n) => (
+                <option key={n} value={n}>{n}</option>
+              ))}
+            </select>
+          </div>
+        )}
+
         <div className="flex justify-between pt-4">
           <button
             type="button"

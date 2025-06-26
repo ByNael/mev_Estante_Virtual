@@ -1,14 +1,15 @@
-const livroService = require("../services/LivroService")
-const errorHandler = require("../utils/errorHandler")
+const livroService = require("../services/livroService")
+const { handleError } = require("../utils/errorHandler")
 const Livro = require('../models/Livro');
 const { EstadoNaoIniciado, EstadoEmLeitura, EstadoConcluido } = require('../models/EstadoLivro');
+const ProgressoLeitura = require('../models/ProgressoLeitura');
 
 exports.getLivros = async (req, res) => {
   try {
     const livros = await livroService.listarLivrosPorUsuario(req.user.id)
     res.json(livros)
   } catch (error) {
-    errorHandler(res, error, "Erro ao buscar livros")
+    handleError(res, error, "Erro ao buscar livros")
   }
 }
 
@@ -17,7 +18,7 @@ exports.getLivro = async (req, res) => {
     const livro = await livroService.buscarLivroPorId(req.params.id, req.user.id)
     res.json(livro)
   } catch (error) {
-    errorHandler(res, error, "Erro ao buscar livro")
+    handleError(res, error, "Erro ao buscar livro")
   }
 }
 
@@ -26,7 +27,7 @@ exports.criarLivro = async (req, res) => {
     const livroCriado = await livroService.criarLivro(req.body, req.user.id)
     res.status(201).json(livroCriado)
   } catch (error) {
-    errorHandler(res, error, "Erro ao criar livro")
+    handleError(res, error, "Erro ao criar livro")
   }
 }
 
@@ -35,7 +36,7 @@ exports.atualizarLivro = async (req, res) => {
     const livroAtualizado = await livroService.atualizarLivro(req.params.id, req.body, req.user.id)
     res.json(livroAtualizado)
   } catch (error) {
-    errorHandler(res, error, "Erro ao atualizar livro")
+    handleError(res, error, "Erro ao atualizar livro")
   }
 }
 
@@ -44,7 +45,7 @@ exports.excluirLivro = async (req, res) => {
     await livroService.excluirLivro(req.params.id, req.user.id)
     res.json({ message: "Livro excluído com sucesso" })
   } catch (error) {
-    errorHandler(res, error, "Erro ao excluir livro")
+    handleError(res, error, "Erro ao excluir livro")
   }
 }
 
@@ -53,7 +54,7 @@ exports.buscarLivros = async (req, res) => {
     const livros = await livroService.buscarLivrosPorTermo(req.query.termo, req.user.id)
     res.json(livros)
   } catch (error) {
-    errorHandler(res, error, "Erro ao buscar livros")
+    handleError(res, error, "Erro ao buscar livros")
   }
 }
 
@@ -72,12 +73,27 @@ exports.atualizarStatus = async (req, res) => {
         switch (novoStatus) {
             case 'quero_ler':
                 livro.setEstado(new EstadoNaoIniciado());
+                // Atualizar também o statusLeitura do progresso
+                await ProgressoLeitura.updateOne(
+                  { livroId: id, usuarioId: req.user.id },
+                  { $set: { statusLeitura: 'quero_ler' } }
+                );
                 break;
             case 'em_leitura':
                 livro.setEstado(new EstadoEmLeitura());
+                // Atualizar também o statusLeitura do progresso
+                await ProgressoLeitura.updateOne(
+                  { livroId: id, usuarioId: req.user.id },
+                  { $set: { statusLeitura: 'em_leitura' } }
+                );
                 break;
             case 'concluido':
                 livro.setEstado(new EstadoConcluido());
+                // Atualizar também o statusLeitura do progresso
+                await ProgressoLeitura.updateOne(
+                  { livroId: id, usuarioId: req.user.id },
+                  { $set: { statusLeitura: 'concluido' } }
+                );
                 break;
             default:
                 return res.status(400).json({ message: 'Status inválido. Use "quero_ler", "em_leitura" ou "concluido".' });

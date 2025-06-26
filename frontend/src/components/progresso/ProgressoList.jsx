@@ -19,6 +19,7 @@ const ProgressoList = () => {
     },
     totalPaginasLidas: 0,
   })
+  const [medias, setMedias] = useState({})
 
   const location = useLocation();
 
@@ -40,6 +41,18 @@ const ProgressoList = () => {
 
         setProgressos(progressosResponse.data)
         setEstatisticas(estatisticasResponse.data)
+
+        // Buscar médias de avaliação
+        const mediasObj = {};
+        await Promise.all(progressosResponse.data.map(async (p) => {
+          const res = await axios.get(
+            `http://localhost:5000/api/progresso/media/${p.livroId._id}`,
+            { headers: { Authorization: `Bearer ${token}` } }
+          );
+          mediasObj[p.livroId._id] = res.data.media;
+        }));
+        setMedias(mediasObj);
+
         setIsLoading(false)
       } catch (error) {
         setError("Erro ao carregar dados")
@@ -159,6 +172,41 @@ const ProgressoList = () => {
                               ? "Lendo"
                               : "Lido"}
                           </span>
+                        </div>
+                      )}
+
+                      {medias[progresso.livroId._id] && (
+                        <div className="mt-2 text-xs text-yellow-700">
+                          Média de avaliações: <span className="font-bold">{Number(medias[progresso.livroId._id]).toFixed(2)}</span>
+                        </div>
+                      )}
+
+                      {progresso.livroId.status === 'concluido' && (
+                        <div className="mt-2 flex items-center gap-2">
+                          <span className="text-xs">Sua nota:</span>
+                          <select
+                            value={progresso.avaliacao || ''}
+                            onChange={async (e) => {
+                              const nota = Number(e.target.value);
+                              if (nota >= 1 && nota <= 5) {
+                                try {
+                                  const token = localStorage.getItem('token');
+                                  await axios.put(`http://localhost:5000/api/progresso/avaliacao/${progresso.livroId._id}`, { avaliacao: nota }, {
+                                    headers: { Authorization: `Bearer ${token}` },
+                                  });
+                                  setProgressos((prev) => prev.map((p) => p._id === progresso._id ? { ...p, avaliacao: nota } : p));
+                                } catch (err) {
+                                  alert('Erro ao salvar nota!');
+                                }
+                              }
+                            }}
+                            className="text-xs px-2 py-1 rounded border border-gray-300"
+                          >
+                            <option value="">Selecione</option>
+                            {[1,2,3,4,5].map((n) => (
+                              <option key={n} value={n}>{n}</option>
+                            ))}
+                          </select>
                         </div>
                       )}
                     </div>

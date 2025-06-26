@@ -69,3 +69,74 @@ exports.atualizarStatusLeitura = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+exports.avaliarLivro = async (req, res) => {
+  try {
+    const { id } = req.params; // id do progresso
+    const { avaliacao } = req.body;
+    if (!avaliacao || avaliacao < 1 || avaliacao > 5) {
+      return res.status(400).json({ message: 'A avaliação deve ser um número inteiro de 1 a 5.' });
+    }
+    const progresso = await ProgressoLeitura.findById(id);
+    if (!progresso) {
+      return res.status(404).json({ message: 'Progresso não encontrado' });
+    }
+    if (progresso.statusLeitura !== 'concluido') {
+      return res.status(400).json({ message: 'Só é possível avaliar livros marcados como lido.' });
+    }
+    progresso.avaliacao = avaliacao;
+    await progresso.save();
+    res.json({ message: 'Avaliação registrada com sucesso', progresso });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+exports.getMediaAvaliacao = async (req, res) => {
+  try {
+    const { livroId } = req.params;
+    const media = await require('../services/progressoService').mediaAvaliacaoLivro(livroId);
+    res.json({ media });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+exports.salvarOuAtualizarNota = async (req, res) => {
+  try {
+    const { livroId } = req.params;
+    const { avaliacao } = req.body;
+    if (!avaliacao || avaliacao < 1 || avaliacao > 5) {
+      return res.status(400).json({ message: 'A nota deve ser um número inteiro de 1 a 5.' });
+    }
+    // Buscar progresso do usuário para o livro
+    let progresso = await ProgressoLeitura.findOne({ livroId, usuarioId: req.user.id });
+    if (!progresso) {
+      // Buscar o livro para pegar totalPaginas
+      const livro = await require('../models/Livro').findById(livroId);
+      if (!livro) {
+        return res.status(404).json({ message: 'Livro não encontrado.' });
+      }
+      progresso = new ProgressoLeitura({
+        livroId,
+        usuarioId: req.user.id,
+        paginaAtual: livro.totalPaginas || 1,
+        totalPaginas: livro.totalPaginas || 1,
+        comentario: '',
+        statusLeitura: 'concluido',
+        avaliacao,
+        dataAtualizacao: new Date(),
+      });
+      await progresso.save();
+      return res.json({ message: 'Nota salva e progresso criado com sucesso', avaliacao: progresso.avaliacao });
+    }
+    if (progresso.statusLeitura !== 'concluido') {
+      return res.status(400).json({ message: 'Só é possível avaliar livros marcados como lido.' });
+    }
+    progresso.avaliacao = avaliacao;
+    await progresso.save();
+    res.json({ message: 'Nota salva com sucesso', avaliacao: progresso.avaliacao });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};

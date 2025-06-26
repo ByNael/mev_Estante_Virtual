@@ -3,6 +3,8 @@ const ProgressoLeitura = require("../models/ProgressoLeitura")
 const NotFoundError = require("../errors/notFoundError")
 const ForbiddenError = require("../errors/forbiddenError")
 const BadRequestError = require("../errors/badRequestError")
+const fs = require('fs');
+const path = require('path');
 
 async function verificarLivroDoUsuario(livroId, usuarioId) {
   const livro = await Livro.findById(livroId)
@@ -45,9 +47,18 @@ exports.atualizarLivro = async (livroId, dados, usuarioId) => {
 }
 
 exports.excluirLivro = async (livroId, usuarioId) => {
-  await verificarLivroDoUsuario(livroId, usuarioId)
-  await ProgressoLeitura.deleteMany({ livroId })
-  await Livro.findByIdAndDelete(livroId)
+  const livro = await verificarLivroDoUsuario(livroId, usuarioId);
+  await ProgressoLeitura.deleteMany({ livroId });
+  // Remover arquivo de capa se não for a padrão
+  if (livro.capa && livro.capa !== 'default-book-cover.jpg') {
+    const capaPath = path.join(__dirname, '..', livro.capa);
+    fs.unlink(capaPath, (err) => {
+      if (err && err.code !== 'ENOENT') {
+        console.error('Erro ao remover a capa:', err);
+      }
+    });
+  }
+  await Livro.findByIdAndDelete(livroId);
 }
 
 exports.buscarLivrosPorTermo = async (termo, usuarioId) => {

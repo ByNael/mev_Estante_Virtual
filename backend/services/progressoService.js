@@ -40,3 +40,10 @@ exports.excluir = async (livroId, usuarioId) => {
   await Livro.findByIdAndUpdate(livroId, { statusLeitura: "Não iniciado" })
   return true
 }
+
+exports.mediaAvaliacaoLivro = async (livroId) => {
+  const avaliacoes = await ProgressoLeitura.find({ livroId, avaliacao: { $ne: null } }, 'avaliacao');
+  if (avaliacoes.length === 0) return null;
+  const soma = avaliacoes.reduce((acc, p) => acc + p.avaliacao, 0);
+  return soma / avaliacoes.length;
+}
