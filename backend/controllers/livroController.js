@@ -1,7 +1,7 @@
 const livroService = require("../services/LivroService")
 const errorHandler = require("../utils/errorHandler")
 const Livro = require('../models/Livro');
-const { EstadoEmLeitura, EstadoConcluido } = require('../models/EstadoLivro');
+const { EstadoNaoIniciado, EstadoEmLeitura, EstadoConcluido } = require('../models/EstadoLivro');
 
 exports.getLivros = async (req, res) => {
   try {
@@ -61,13 +61,18 @@ exports.atualizarStatus = async (req, res) => {
     try {
         const { id } = req.params;
         const { novoStatus } = req.body;
-
         const livro = await Livro.findById(id);
         if (!livro) {
             return res.status(404).json({ message: 'Livro não encontrado' });
         }
-
+        // Verifica se o usuário é o dono do livro
+        if (livro.usuarioId.toString() !== req.user.id) {
+            return res.status(403).json({ message: 'Acesso negado' });
+        }
         switch (novoStatus) {
+            case 'quero_ler':
+                livro.setEstado(new EstadoNaoIniciado());
+                break;
             case 'em_leitura':
                 livro.setEstado(new EstadoEmLeitura());
                 break;
@@ -75,13 +80,30 @@ exports.atualizarStatus = async (req, res) => {
                 livro.setEstado(new EstadoConcluido());
                 break;
             default:
-                return res.status(400).json({ message: 'Status inválido' });
+                return res.status(400).json({ message: 'Status inválido. Use "quero_ler", "em_leitura" ou "concluido".' });
         }
-
         livro.atualizar();
         await livro.save();
+        res.json({ message: 'Status atualizado com sucesso', livro });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
 
-        res.json(livro);
+exports.uploadCapa = async (req, res) => {
+    try {
+        const { id } = req.params;
+        if (!req.file) {
+            return res.status(400).json({ message: 'Nenhuma imagem enviada.' });
+        }
+        const livro = await Livro.findById(id);
+        if (!livro) {
+            return res.status(404).json({ message: 'Livro não encontrado.' });
+        }
+        // Atualiza o campo capa com o caminho relativo
+        livro.capa = `/uploads/capas/${req.file.filename}`;
+        await livro.save();
+        res.json({ message: 'Capa atualizada com sucesso.', capa: livro.capa });
     } catch (error) {
         res.status(500).json({ message: error.message });
     }

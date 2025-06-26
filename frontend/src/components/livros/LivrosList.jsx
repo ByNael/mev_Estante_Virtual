@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react"
 import { Link, useNavigate } from "react-router-dom"
 import axios from "axios"
+import StatusLivro from '../StatusLivro'
 
 const LivrosList = () => {
   const [livros, setLivros] = useState([])
@@ -85,20 +86,9 @@ const LivrosList = () => {
     }
   }
 
-  const getStatusColor = (status) => {
-    switch (status) {
-      case "Não iniciado":
-        return "bg-gray-200 text-gray-800"
-      case "Em andamento":
-        return "bg-blue-200 text-blue-800"
-      case "Concluído":
-        return "bg-green-200 text-green-800"
-      case "Abandonado":
-        return "bg-red-200 text-red-800"
-      default:
-        return "bg-gray-200 text-gray-800"
-    }
-  }
+  const handleStatusChange = (livroAtualizado) => {
+    setLivros((prevLivros) => prevLivros.map((l) => l._id === livroAtualizado.livro._id ? { ...l, ...livroAtualizado.livro } : l));
+  };
 
   return (
     <div className="max-w-6xl mx-auto p-4">
@@ -147,16 +137,20 @@ const LivrosList = () => {
           {livros.map((livro) => (
             <div key={livro._id} className="bg-white rounded-lg shadow-md overflow-hidden border border-gray-200">
               <div className="flex h-40">
-                <div className="w-1/3 bg-gray-200">
-                  <img
-                    src={livro.capa || "https://via.placeholder.com/150?text=Sem+Capa"}
-                    alt={`Capa de ${livro.titulo}`}
-                    className="h-full w-full object-cover"
-                    onError={(e) => {
-                      e.target.onerror = null
-                      e.target.src = "https://via.placeholder.com/150?text=Sem+Capa"
-                    }}
-                  />
+                <div className="w-1/3 bg-gray-200 flex items-center justify-center h-full">
+                  {livro.capa ? (
+                    <img
+                      src={livro.capa ? `http://localhost:5000${livro.capa}` : undefined}
+                      alt={`Capa de ${livro.titulo}`}
+                      className="h-full w-full object-cover"
+                    />
+                  ) : (
+                    <svg className="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                      <rect x="3" y="4" width="18" height="16" rx="2" ry="2" stroke="currentColor" fill="none" />
+                      <circle cx="8.5" cy="9.5" r="1.5" />
+                      <path d="M21 15l-5-5L5 21" />
+                    </svg>
+                  )}
                 </div>
                 <div className="w-2/3 p-4">
                   <h3 className="font-bold text-lg mb-1 truncate" title={livro.titulo}>
@@ -168,11 +162,7 @@ const LivrosList = () => {
                   <p className="text-gray-500 text-xs mb-2">
                     {livro.genero} • {livro.anoPublicacao}
                   </p>
-                  <span
-                    className={`inline-block px-2 py-1 text-xs rounded-full ${getStatusColor(livro.statusLeitura)}`}
-                  >
-                    {livro.statusLeitura}
-                  </span>
+                  <StatusLivro livro={livro} onStatusChange={handleStatusChange} />
                 </div>
               </div>
               <div className="border-t border-gray-200 bg-gray-50 px-4 py-3 flex justify-between">

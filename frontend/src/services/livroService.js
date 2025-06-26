@@ -1,12 +1,14 @@
-const API_URL = 'http://localhost:3000/api';
+const API_URL = 'http://localhost:5000/api';
 
 export const livroService = {
     async atualizarStatusLivro(livroId, novoStatus) {
         try {
+            const token = localStorage.getItem('token');
             const response = await fetch(`${API_URL}/livros/${livroId}/status`, {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`,
                 },
                 body: JSON.stringify({ novoStatus }),
             });

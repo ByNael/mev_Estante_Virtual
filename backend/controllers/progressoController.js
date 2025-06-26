@@ -1,6 +1,7 @@
 const progressoService = require("../services/progressoService")
 const estatisticasService = require("../services/estatisticasService")
 const { handleError } = require("../utils/errorHandler")
+const ProgressoLeitura = require("../models/ProgressoLeitura")
 
 exports.getProgressoLivro = async (req, res) => {
   try {
@@ -52,3 +53,19 @@ exports.getEstatisticas = async (req, res) => {
     handleError(res, error, "Erro ao buscar estatísticas")
   }
 }
+
+exports.atualizarStatusLeitura = async (req, res) => {
+  try {
+    const { id } = req.params; // id do progresso
+    const { statusLeitura } = req.body;
+    const progresso = await ProgressoLeitura.findById(id);
+    if (!progresso) {
+      return res.status(404).json({ message: 'Progresso não encontrado' });
+    }
+    progresso.statusLeitura = statusLeitura;
+    await progresso.save();
+    res.json({ message: 'Status de leitura atualizado com sucesso', progresso });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};

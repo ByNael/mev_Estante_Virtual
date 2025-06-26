@@ -21,7 +21,7 @@ const StatusLivro = ({ livro, onStatusChange }) => {
 
     const getStatusColor = (status) => {
         switch (status) {
-            case 'nao_iniciado':
+            case 'quero_ler':
                 return 'bg-gray-200';
             case 'em_leitura':
                 return 'bg-blue-200';
@@ -37,26 +37,33 @@ const StatusLivro = ({ livro, onStatusChange }) => {
             <div className="flex items-center gap-2">
                 <span className="text-sm font-medium">Status:</span>
                 <span className={`px-2 py-1 rounded-full text-sm ${getStatusColor(livro.status)}`}>
-                    {livro.status === 'nao_iniciado' && 'Não Iniciado'}
-                    {livro.status === 'em_leitura' && 'Em Leitura'}
-                    {livro.status === 'concluido' && 'Concluído'}
+                    {livro.status === 'quero_ler' && 'Quero Ler'}
+                    {livro.status === 'em_leitura' && 'Lendo'}
+                    {livro.status === 'concluido' && 'Lido'}
                 </span>
             </div>
 
-            <div className="flex gap-2">
+            <div className="flex flex-col sm:flex-row gap-2 w-full">
+                <button
+                    onClick={() => handleStatusChange('quero_ler')}
+                    disabled={loading || livro.status === 'quero_ler'}
+                    className="flex-1 px-3 py-1 text-sm bg-gray-500 text-white rounded hover:bg-gray-600 disabled:opacity-50"
+                >
+                    {loading ? 'Atualizando...' : 'Quero Ler'}
+                </button>
                 <button
                     onClick={() => handleStatusChange('em_leitura')}
                     disabled={loading || livro.status === 'em_leitura'}
-                    className="px-3 py-1 text-sm bg-blue-500 text-white rounded hover:bg-blue-600 disabled:opacity-50"
+                    className="flex-1 px-3 py-1 text-sm bg-blue-500 text-white rounded hover:bg-blue-600 disabled:opacity-50"
                 >
-                    {loading ? 'Atualizando...' : 'Começar a Ler'}
+                    {loading ? 'Atualizando...' : 'Lendo'}
                 </button>
                 <button
                     onClick={() => handleStatusChange('concluido')}
                     disabled={loading || livro.status === 'concluido'}
-                    className="px-3 py-1 text-sm bg-green-500 text-white rounded hover:bg-green-600 disabled:opacity-50"
+                    className="flex-1 px-3 py-1 text-sm bg-green-500 text-white rounded hover:bg-green-600 disabled:opacity-50"
                 >
-                    {loading ? 'Atualizando...' : 'Marcar como Concluído'}
+                    {loading ? 'Atualizando...' : 'Lido'}
                 </button>
             </div>
 

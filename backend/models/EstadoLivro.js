@@ -6,7 +6,7 @@ class EstadoLivro {
 
 class EstadoNaoIniciado extends EstadoLivro {
     atualizar(livro) {
-        livro.status = 'nao_iniciado';
+        livro.status = 'quero_ler';
         livro.dataAtualizacao = new Date();
     }
 }

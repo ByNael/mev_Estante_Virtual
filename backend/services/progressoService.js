@@ -7,7 +7,7 @@ exports.buscarPorLivro = async (livroId, usuarioId) => {
 }
 
 exports.listarTodos = async (usuarioId) => {
-  return await ProgressoLeitura.find({ usuarioId }).populate("livroId", "titulo autor capa")
+  return await ProgressoLeitura.find({ usuarioId }).populate("livroId", "titulo autor capa status")
 }
 
 exports.criarOuAtualizar = async (livroId, usuarioId, dados) => {

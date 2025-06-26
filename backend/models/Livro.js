@@ -26,15 +26,6 @@ const LivroSchema = new mongoose.Schema(
       min: [1000, "Ano de publicação inválido"],
       max: [new Date().getFullYear(), "Ano de publicação não pode ser no futuro"],
     },
-    statusLeitura: {
-      type: String,
-      required: [true, "O status de leitura é obrigatório"],
-      enum: {
-        values: ["Não iniciado", "Em andamento", "Concluído", "Abandonado"],
-        message: "Status de leitura inválido",
-      },
-      default: "Não iniciado",
-    },
     descricao: {
       type: String,
       trim: true,
@@ -53,7 +44,11 @@ const LivroSchema = new mongoose.Schema(
       type: Date,
       default: Date.now,
     },
-    status: { type: String, default: 'nao_iniciado' },
+    status: { 
+      type: String, 
+      enum: ['quero_ler', 'em_leitura', 'concluido'],
+      default: 'quero_ler' 
+    },
     dataAtualizacao: { type: Date, default: Date.now },
   },
   {

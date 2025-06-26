@@ -3,6 +3,7 @@ const cors = require("cors")
 const mongoose = require("mongoose")
 const bcrypt = require("bcrypt")
 const jwt = require("jsonwebtoken")
+const path = require('path')
 require("dotenv").config()
 
 // Importar modelos
@@ -20,6 +21,11 @@ const PORT = process.env.PORT || 5000
 // Middleware
 app.use(cors())
 app.use(express.json())
+app.use('/uploads/capas', (req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  next();
+});
+app.use('/uploads/capas', express.static(path.join(__dirname, 'uploads/capas')));
 
 // Conexão com MongoDB
 mongoose

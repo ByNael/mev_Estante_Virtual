@@ -1,8 +1,9 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { Link } from "react-router-dom"
+import { Link, useLocation } from "react-router-dom"
 import axios from "axios"
+import StatusLivro from '../StatusLivro'
 
 const ProgressoList = () => {
   const [progressos, setProgressos] = useState([])
@@ -18,6 +19,8 @@ const ProgressoList = () => {
     },
     totalPaginasLidas: 0,
   })
+
+  const location = useLocation();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -46,7 +49,7 @@ const ProgressoList = () => {
     }
 
     fetchData()
-  }, [])
+  }, [location])
 
   // Ordenar progressos por percentual concluído (decrescente)
   const progressosOrdenados = [...progressos].sort((a, b) => b.percentualConcluido - a.percentualConcluido)
@@ -104,16 +107,20 @@ const ProgressoList = () => {
               <div key={progresso._id} className="bg-white rounded-lg shadow-md overflow-hidden border border-gray-200">
                 <div className="p-4">
                   <div className="flex items-start">
-                    <div className="flex-shrink-0 mr-4">
-                      <img
-                        src={progresso.livroId.capa || "https://via.placeholder.com/100?text=Sem+Capa"}
-                        alt={`Capa de ${progresso.livroId.titulo}`}
-                        className="w-16 h-20 object-cover rounded"
-                        onError={(e) => {
-                          e.target.onerror = null
-                          e.target.src = "https://via.placeholder.com/100?text=Sem+Capa"
-                        }}
-                      />
+                    <div className="flex-shrink-0 mr-4 flex items-center justify-center w-16 h-20 bg-gray-200 rounded">
+                      {progresso.livroId.capa ? (
+                        <img
+                          src={`http://localhost:5000${progresso.livroId.capa}`}
+                          alt={`Capa de ${progresso.livroId.titulo}`}
+                          className="w-16 h-20 object-cover rounded"
+                        />
+                      ) : (
+                        <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                          <rect x="3" y="4" width="18" height="16" rx="2" ry="2" stroke="currentColor" fill="none" />
+                          <circle cx="8.5" cy="9.5" r="1.5" />
+                          <path d="M21 15l-5-5L5 21" />
+                        </svg>
+                      )}
                     </div>
                     <div className="flex-1">
                       <h4 className="font-bold text-lg mb-1">{progresso.livroId.titulo}</h4>
@@ -133,6 +140,27 @@ const ProgressoList = () => {
                           ></div>
                         </div>
                       </div>
+
+                      {progresso._id && (
+                        <div className="flex items-center gap-2 mt-2">
+                          <span className="text-xs font-medium">Status:</span>
+                          <span
+                            className={`px-2 py-1 rounded-full text-xs ${
+                              progresso.livroId.status === "quero_ler"
+                                ? "bg-gray-200 text-gray-800"
+                                : progresso.livroId.status === "em_leitura"
+                                ? "bg-blue-200 text-blue-800"
+                                : "bg-green-200 text-green-800"
+                            }`}
+                          >
+                            {progresso.livroId.status === "quero_ler"
+                              ? "Quero Ler"
+                              : progresso.livroId.status === "em_leitura"
+                              ? "Lendo"
+                              : "Lido"}
+                          </span>
+                        </div>
+                      )}
                     </div>
                   </div>
 

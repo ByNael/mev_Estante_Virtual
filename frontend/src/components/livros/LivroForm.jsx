@@ -19,6 +19,7 @@ const LivroForm = () => {
     capa: "",
     totalPaginas: 0,
   })
+  const [previewCapa, setPreviewCapa] = useState(null);
 
   // Buscar dados do livro se for edição
   useEffect(() => {
@@ -107,6 +108,32 @@ const LivroForm = () => {
       console.error("Erro ao salvar livro:", error)
     }
   }
+
+  const handleCapaChange = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    setPreviewCapa(URL.createObjectURL(file));
+    try {
+      const token = localStorage.getItem('token');
+      const formData = new FormData();
+      formData.append('capa', file);
+      let livroId = id;
+      if (!livroId) {
+        setError('Salve o livro antes de adicionar a capa.');
+        return;
+      }
+      const response = await axios.post(`http://localhost:5000/api/livros/${livroId}/capa`, formData, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      setLivro((prev) => ({ ...prev, capa: response.data.capa }));
+    } catch (error) {
+      setError('Erro ao fazer upload da capa.');
+      console.error(error);
+    }
+  };
 
   if (isLoading && id) {
     return <div className="flex justify-center items-center h-64">Carregando...</div>
@@ -234,27 +261,22 @@ const LivroForm = () => {
 
         <div>
           <label htmlFor="capa" className="block text-sm font-medium text-gray-700">
-            URL da Capa
+            Capa do Livro
           </label>
           <input
-            type="url"
+            type="file"
             id="capa"
             name="capa"
-            value={livro.capa}
-            onChange={handleChange}
-            placeholder="https://exemplo.com/capa.jpg"
+            accept="image/*"
+            onChange={handleCapaChange}
             className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
           />
-          {livro.capa && (
+          {(previewCapa || livro.capa) && (
             <div className="mt-2">
               <img
-                src={livro.capa || "/placeholder.svg"}
+                src={previewCapa || livro.capa}
                 alt="Capa do livro"
                 className="h-32 object-cover rounded"
-                onError={(e) => {
-                  e.target.onerror = null
-                  e.target.src = "https://via.placeholder.com/150?text=Sem+Capa"
-                }}
               />
             </div>
           )}

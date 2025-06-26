@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
 import axios from "axios"
+import StatusLivro from "./StatusLivro"
 
 function Dashboard() {
   const [user, setUser] = useState(null)
@@ -128,16 +129,20 @@ function Dashboard() {
             {livrosRecentes.map((livro) => (
               <div key={livro._id} className="bg-white rounded-lg shadow-md overflow-hidden border border-gray-200">
                 <div className="flex h-40">
-                  <div className="w-1/3 bg-gray-200">
-                    <img
-                      src={livro.capa || "https://via.placeholder.com/150?text=Sem+Capa"}
-                      alt={`Capa de ${livro.titulo}`}
-                      className="h-full w-full object-cover"
-                      onError={(e) => {
-                        e.target.onerror = null
-                        e.target.src = "https://via.placeholder.com/150?text=Sem+Capa"
-                      }}
-                    />
+                  <div className="w-1/3 bg-gray-200 flex items-center justify-center h-full">
+                    {livro.capa ? (
+                      <img
+                        src={`http://localhost:5000${livro.capa}`}
+                        alt={`Capa de ${livro.titulo}`}
+                        className="h-full w-full object-cover"
+                      />
+                    ) : (
+                      <svg className="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                        <rect x="3" y="4" width="18" height="16" rx="2" ry="2" stroke="currentColor" fill="none" />
+                        <circle cx="8.5" cy="9.5" r="1.5" />
+                        <path d="M21 15l-5-5L5 21" />
+                      </svg>
+                    )}
                   </div>
                   <div className="w-2/3 p-4">
                     <h3 className="font-bold text-lg mb-1 truncate" title={livro.titulo}>
@@ -149,19 +154,7 @@ function Dashboard() {
                     <p className="text-gray-500 text-xs mb-2">
                       {livro.genero} • {livro.anoPublicacao}
                     </p>
-                    <span
-                      className={`inline-block px-2 py-1 text-xs rounded-full ${
-                        livro.statusLeitura === "Não iniciado"
-                          ? "bg-gray-200 text-gray-800"
-                          : livro.statusLeitura === "Em andamento"
-                            ? "bg-blue-200 text-blue-800"
-                            : livro.statusLeitura === "Concluído"
-                              ? "bg-green-200 text-green-800"
-                              : "bg-red-200 text-red-800"
-                      }`}
-                    >
-                      {livro.statusLeitura}
-                    </span>
+                    <StatusLivro livro={livro} onStatusChange={() => {}} />
                   </div>
                 </div>
                 <div className="border-t border-gray-200 bg-gray-50 px-4 py-3 flex justify-between">

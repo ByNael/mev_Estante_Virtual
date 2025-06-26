@@ -12,5 +12,6 @@ router.get("/estatisticas", progressoController.getEstatisticas)
 router.get("/:livroId", progressoController.getProgressoLivro)
 router.post("/:livroId", progressoController.atualizarProgresso)
 router.delete("/:livroId", progressoController.excluirProgresso)
+router.patch('/:id/status', progressoController.atualizarStatusLeitura)
 
 module.exports = router
