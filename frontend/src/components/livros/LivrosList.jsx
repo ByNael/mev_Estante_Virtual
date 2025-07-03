@@ -7,14 +7,39 @@ import StatusLivro from '../StatusLivro'
 
 const LivrosList = () => {
   const [livros, setLivros] = useState([])
+  const [livrosFiltrados, setLivrosFiltrados] = useState([])
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState("")
   const [searchTerm, setSearchTerm] = useState("")
+  const [filtroStatus, setFiltroStatus] = useState("todos") // "todos", "quero_ler", "em_leitura", "concluido"
   const navigate = useNavigate()
 
   useEffect(() => {
     fetchLivros()
   }, [])
+
+  useEffect(() => {
+    aplicarFiltros()
+  }, [livros, searchTerm, filtroStatus])
+
+  const aplicarFiltros = () => {
+    let filtrados = [...livros]
+
+    // Filtro por busca (título ou autor)
+    if (searchTerm.trim()) {
+      filtrados = filtrados.filter(livro =>
+        livro.titulo.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        livro.autor.toLowerCase().includes(searchTerm.toLowerCase())
+      )
+    }
+
+    // Filtro por status
+    if (filtroStatus !== "todos") {
+      filtrados = filtrados.filter(livro => livro.status === filtroStatus)
+    }
+
+    setLivrosFiltrados(filtrados)
+  }
 
   const fetchLivros = async () => {
     try {
@@ -45,27 +70,9 @@ const LivrosList = () => {
     }
   }
 
-  const handleSearch = async () => {
-    if (!searchTerm.trim()) {
-      fetchLivros()
-      return
-    }
-
-    try {
-      setIsLoading(true)
-      const token = localStorage.getItem("token")
-
-      const response = await axios.get(`http://localhost:5000/api/livros/busca?termo=${searchTerm}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      })
-
-      setLivros(response.data)
-      setIsLoading(false)
-    } catch (error) {
-      setError("Erro ao buscar livros")
-      setIsLoading(false)
-      console.error("Erro na busca:", error)
-    }
+  const handleSearch = () => {
+    // A busca agora é feita automaticamente pelo useEffect
+    // Esta função pode ser removida ou mantida para compatibilidade
   }
 
   const handleDelete = async (id) => {
@@ -90,6 +97,32 @@ const LivrosList = () => {
     setLivros((prevLivros) => prevLivros.map((l) => l._id === livroAtualizado.livro._id ? { ...l, ...livroAtualizado.livro } : l));
   };
 
+  const getStatusCount = (status) => {
+    return livros.filter(livro => livro.status === status).length
+  }
+
+  const getStatusButtonClass = (status) => {
+    const baseClass = "px-4 py-2 rounded-md text-sm font-medium transition-colors"
+    const isActive = filtroStatus === status
+    
+    if (isActive) {
+      switch (status) {
+        case "todos":
+          return `${baseClass} bg-gray-600 text-white`
+        case "quero_ler":
+          return `${baseClass} bg-gray-500 text-white`
+        case "em_leitura":
+          return `${baseClass} bg-blue-500 text-white`
+        case "concluido":
+          return `${baseClass} bg-green-500 text-white`
+        default:
+          return `${baseClass} bg-gray-600 text-white`
+      }
+    } else {
+      return `${baseClass} bg-gray-200 text-gray-700 hover:bg-gray-300`
+    }
+  }
+
   return (
     <div className="max-w-6xl mx-auto p-4">
       <div className="flex justify-between items-center mb-6">
@@ -104,6 +137,7 @@ const LivrosList = () => {
 
       {error && <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">{error}</div>}
 
+      {/* Barra de busca */}
       <div className="mb-6">
         <div className="flex gap-2">
           <input
@@ -112,13 +146,36 @@ const LivrosList = () => {
             onChange={(e) => setSearchTerm(e.target.value)}
             placeholder="Buscar por título ou autor..."
             className="flex-grow px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-            onKeyPress={(e) => e.key === "Enter" && handleSearch()}
           />
+        </div>
+      </div>
+
+      {/* Filtros por status */}
+      <div className="mb-6">
+        <div className="flex flex-wrap gap-2">
           <button
-            onClick={handleSearch}
-            className="px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
+            onClick={() => setFiltroStatus("todos")}
+            className={getStatusButtonClass("todos")}
           >
-            Buscar
+            Todos ({livros.length})
+          </button>
+          <button
+            onClick={() => setFiltroStatus("quero_ler")}
+            className={getStatusButtonClass("quero_ler")}
+          >
+            Quero Ler ({getStatusCount("quero_ler")})
+          </button>
+          <button
+            onClick={() => setFiltroStatus("em_leitura")}
+            className={getStatusButtonClass("em_leitura")}
+          >
+            Lendo ({getStatusCount("em_leitura")})
+          </button>
+          <button
+            onClick={() => setFiltroStatus("concluido")}
+            className={getStatusButtonClass("concluido")}
+          >
+            Lido ({getStatusCount("concluido")})
           </button>
         </div>
       </div>
@@ -127,14 +184,24 @@ const LivrosList = () => {
         <div className="flex justify-center items-center h-64">
           <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
         </div>
-      ) : livros.length === 0 ? (
+      ) : livrosFiltrados.length === 0 ? (
         <div className="text-center py-10">
-          <p className="text-gray-500 text-lg">Nenhum livro encontrado.</p>
-          <p className="text-gray-500">Adicione seu primeiro livro clicando no botão acima.</p>
+          <p className="text-gray-500 text-lg">
+            {searchTerm || filtroStatus !== "todos" 
+              ? "Nenhum livro encontrado com os filtros aplicados." 
+              : "Nenhum livro encontrado."
+            }
+          </p>
+          <p className="text-gray-500">
+            {searchTerm || filtroStatus !== "todos" 
+              ? "Tente ajustar os filtros ou adicione um novo livro." 
+              : "Adicione seu primeiro livro clicando no botão acima."
+            }
+          </p>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {livros.map((livro) => (
+          {livrosFiltrados.map((livro) => (
             <div key={livro._id} className="bg-white rounded-lg shadow-md overflow-hidden border border-gray-200">
               <div className="flex h-40">
                 <div className="w-1/3 bg-gray-200 flex items-center justify-center h-full">
