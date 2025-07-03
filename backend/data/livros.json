@@ -1,0 +1,457 @@
+[
+  {
+    "titulo": "1984",
+    "autor": "George Orwell",
+    "genero": "Ficção Científica",
+    "tags": ["distopia", "política", "clássico"],
+    "descricao": "Um romance distópico sobre um regime totalitário que vigia todos os cidadãos."
+  },
+  {
+    "titulo": "O Senhor dos Anéis",
+    "autor": "J.R.R. Tolkien",
+    "genero": "Fantasia",
+    "tags": ["aventura", "épico", "magia"],
+    "descricao": "Uma jornada épica para destruir um anel poderoso e salvar a Terra-média."
+  },
+  {
+    "titulo": "Dom Casmurro",
+    "autor": "Machado de Assis",
+    "genero": "Romance",
+    "tags": ["clássico", "brasileiro", "drama"],
+    "descricao": "A história de Bentinho e Capitu, marcada por ciúmes e dúvidas."
+  },
+  {
+    "titulo": "A Menina que Roubava Livros",
+    "autor": "Markus Zusak",
+    "genero": "Drama",
+    "tags": ["segunda guerra", "emoção", "literatura"],
+    "descricao": "Uma jovem encontra esperança em meio à Segunda Guerra Mundial através dos livros."
+  },
+  {
+    "titulo": "Harry Potter e a Pedra Filosofal",
+    "autor": "J.K. Rowling",
+    "genero": "Fantasia",
+    "tags": ["magia", "aventura", "infantojuvenil"],
+    "descricao": "O início da jornada de Harry Potter no mundo da magia."
+  },
+  {
+    "titulo": "O Código Da Vinci",
+    "autor": "Dan Brown",
+    "genero": "Suspense",
+    "tags": ["mistério", "conspiração", "ação"],
+    "descricao": "Um simbologista desvenda segredos ocultos em uma trama cheia de reviravoltas."
+  },
+  {
+    "titulo": "Orgulho e Preconceito",
+    "autor": "Jane Austen",
+    "genero": "Romance",
+    "tags": ["clássico", "amor", "sociedade"],
+    "descricao": "A história de Elizabeth Bennet e sua luta contra as convenções sociais."
+  },
+  {
+    "titulo": "A Revolução dos Bichos",
+    "autor": "George Orwell",
+    "genero": "Fábula",
+    "tags": ["política", "sátira", "animais"],
+    "descricao": "Uma sátira sobre o poder e a corrupção, protagonizada por animais de uma fazenda."
+  },
+  {
+    "titulo": "O Pequeno Príncipe",
+    "autor": "Antoine de Saint-Exupéry",
+    "genero": "Fábula",
+    "tags": ["filosofia", "infantil", "poesia"],
+    "descricao": "Um príncipe viaja por planetas e aprende lições sobre a vida e o amor."
+  },
+  {
+    "titulo": "Garota Exemplar",
+    "autor": "Gillian Flynn",
+    "genero": "Thriller",
+    "tags": ["suspense", "mistério", "final surpreendente"],
+    "descricao": "Um thriller psicológico sobre o desaparecimento de uma mulher e os segredos de seu casamento."
+  },
+  {
+    "titulo": "O Alquimista",
+    "autor": "Paulo Coelho",
+    "genero": "Ficção",
+    "tags": ["inspiração", "aventura", "filosofia"],
+    "descricao": "Um jovem pastor parte em busca de um tesouro e descobre o verdadeiro sentido da vida."
+  },
+  {
+    "titulo": "Moby Dick",
+    "autor": "Herman Melville",
+    "genero": "Aventura",
+    "tags": ["mar", "baleia", "clássico"],
+    "descricao": "A obsessão do capitão Ahab pela baleia branca Moby Dick."
+  },
+  {
+    "titulo": "O Morro dos Ventos Uivantes",
+    "autor": "Emily Brontë",
+    "genero": "Romance Gótico",
+    "tags": ["tragédia", "amor", "vingança"],
+    "descricao": "Uma história intensa de amor e ódio nos campos de Yorkshire."
+  },
+  {
+    "titulo": "Cem Anos de Solidão",
+    "autor": "Gabriel García Márquez",
+    "genero": "Realismo Fantástico",
+    "tags": ["família", "magia", "latino-americano"],
+    "descricao": "A saga da família Buendía na fictícia Macondo."
+  },
+  {
+    "titulo": "O Hobbit",
+    "autor": "J.R.R. Tolkien",
+    "genero": "Fantasia",
+    "tags": ["aventura", "magia", "clássico"],
+    "descricao": "Bilbo Bolseiro embarca em uma jornada inesperada com anões e um mago."
+  },
+  {
+    "titulo": "A Metamorfose",
+    "autor": "Franz Kafka",
+    "genero": "Ficção Surrealista",
+    "tags": ["existencialismo", "absurdo", "clássico"],
+    "descricao": "Gregor Samsa acorda transformado em um inseto monstruoso."
+  },
+  {
+    "titulo": "O Apanhador no Campo de Centeio",
+    "autor": "J.D. Salinger",
+    "genero": "Romance",
+    "tags": ["adolescência", "rebeldia", "clássico"],
+    "descricao": "Holden Caulfield narra sua fuga e reflexões sobre a vida."
+  },
+  {
+    "titulo": "O Nome do Vento",
+    "autor": "Patrick Rothfuss",
+    "genero": "Fantasia",
+    "tags": ["magia", "aventura", "épico"],
+    "descricao": "A história de Kvothe, um mago lendário, contada por ele mesmo."
+  },
+  {
+    "titulo": "A Guerra dos Tronos",
+    "autor": "George R. R. Martin",
+    "genero": "Fantasia",
+    "tags": ["épico", "política", "dragões"],
+    "descricao": "Nobreza, intrigas e batalhas pelo Trono de Ferro em Westeros."
+  },
+  {
+    "titulo": "O Sol é Para Todos",
+    "autor": "Harper Lee",
+    "genero": "Drama",
+    "tags": ["justiça", "racismo", "clássico"],
+    "descricao": "Uma menina observa o julgamento de um homem negro no sul dos EUA."
+  },
+  {
+    "titulo": "Drácula",
+    "autor": "Bram Stoker",
+    "genero": "Terror",
+    "tags": ["vampiro", "clássico", "gótico"],
+    "descricao": "O conde Drácula espalha terror na Inglaterra vitoriana."
+  },
+  {
+    "titulo": "Frankenstein",
+    "autor": "Mary Shelley",
+    "genero": "Terror",
+    "tags": ["monstro", "ciência", "clássico"],
+    "descricao": "Victor Frankenstein cria uma criatura que desafia a natureza."
+  },
+  {
+    "titulo": "O Grande Gatsby",
+    "autor": "F. Scott Fitzgerald",
+    "genero": "Romance",
+    "tags": ["anos 20", "tragédia", "clássico"],
+    "descricao": "A busca de Gatsby pelo amor perdido durante a era do jazz."
+  },
+  {
+    "titulo": "O Lobo da Estepe",
+    "autor": "Hermann Hesse",
+    "genero": "Ficção Filosófica",
+    "tags": ["existencialismo", "psicologia", "clássico"],
+    "descricao": "Harry Haller vive o conflito entre sua natureza humana e selvagem."
+  },
+  {
+    "titulo": "O Retrato de Dorian Gray",
+    "autor": "Oscar Wilde",
+    "genero": "Ficção Gótica",
+    "tags": ["vaidade", "moralidade", "clássico"],
+    "descricao": "Dorian Gray permanece jovem enquanto seu retrato envelhece."
+  },
+  {
+    "titulo": "O Processo",
+    "autor": "Franz Kafka",
+    "genero": "Ficção Surrealista",
+    "tags": ["justiça", "absurdo", "clássico"],
+    "descricao": "Josef K. é preso e processado sem saber o motivo."
+  },
+  {
+    "titulo": "O Médico e o Monstro",
+    "autor": "Robert Louis Stevenson",
+    "genero": "Terror",
+    "tags": ["dupla personalidade", "clássico", "mistério"],
+    "descricao": "Dr. Jekyll cria uma poção que libera seu lado sombrio, Mr. Hyde."
+  },
+  {
+    "titulo": "O Velho e o Mar",
+    "autor": "Ernest Hemingway",
+    "genero": "Aventura",
+    "tags": ["mar", "superação", "clássico"],
+    "descricao": "Um velho pescador luta contra um enorme peixe no Golfo do México."
+  },
+  {
+    "titulo": "O Estrangeiro",
+    "autor": "Albert Camus",
+    "genero": "Ficção Filosófica",
+    "tags": ["absurdo", "existencialismo", "clássico"],
+    "descricao": "Meursault vive a vida de forma indiferente até cometer um crime."
+  },
+  {
+    "titulo": "O Castelo",
+    "autor": "Franz Kafka",
+    "genero": "Ficção Surrealista",
+    "tags": ["burocracia", "absurdo", "clássico"],
+    "descricao": "K. tenta, sem sucesso, obter acesso ao misterioso castelo."
+  },
+  {
+    "titulo": "Ensaio Sobre a Cegueira",
+    "autor": "José Saramago",
+    "genero": "Ficção",
+    "tags": ["distopia", "sociedade", "filosofia"],
+    "descricao": "Uma epidemia de cegueira repentina atinge uma cidade, revelando o lado sombrio da humanidade."
+  },
+  {
+    "titulo": "O Silmarillion",
+    "autor": "J.R.R. Tolkien",
+    "genero": "Fantasia",
+    "tags": ["mitologia", "épico", "magia"],
+    "descricao": "A criação do mundo de Tolkien e as lendas da Terra-média."
+  },
+  {
+    "titulo": "O Código dos Justos",
+    "autor": "John Grisham",
+    "genero": "Suspense Jurídico",
+    "tags": ["justiça", "crime", "tribunal"],
+    "descricao": "Um jovem advogado enfrenta um sistema judicial corrupto."
+  },
+  {
+    "titulo": "O Caçador de Pipas",
+    "autor": "Khaled Hosseini",
+    "genero": "Drama",
+    "tags": ["amizade", "culpa", "Afeganistão"],
+    "descricao": "A história de amizade e redenção entre dois meninos em Cabul."
+  },
+  {
+    "titulo": "O Leão, a Feiticeira e o Guarda-Roupa",
+    "autor": "C.S. Lewis",
+    "genero": "Fantasia",
+    "tags": ["aventura", "magia", "infantil"],
+    "descricao": "Quatro irmãos descobrem o mundo mágico de Nárnia."
+  },
+  {
+    "titulo": "O Homem Invisível",
+    "autor": "H.G. Wells",
+    "genero": "Ficção Científica",
+    "tags": ["invisibilidade", "ciência", "clássico"],
+    "descricao": "Um cientista descobre como se tornar invisível, mas paga um preço alto."
+  },
+  {
+    "titulo": "O Tempo e o Vento",
+    "autor": "Erico Verissimo",
+    "genero": "Romance Histórico",
+    "tags": ["Brasil", "família", "épico"],
+    "descricao": "A saga da família Terra Cambará no sul do Brasil."
+  },
+  {
+    "titulo": "O Pequeno Nicolau",
+    "autor": "René Goscinny",
+    "genero": "Infantil",
+    "tags": ["humor", "escola", "amizade"],
+    "descricao": "As divertidas aventuras de um menino e seus colegas de escola."
+  },
+  {
+    "titulo": "O Mundo de Sofia",
+    "autor": "Jostein Gaarder",
+    "genero": "Filosofia",
+    "tags": ["filosofia", "educação", "mistério"],
+    "descricao": "Uma introdução à história da filosofia através de uma narrativa envolvente."
+  },
+  {
+    "titulo": "O Menino do Pijama Listrado",
+    "autor": "John Boyne",
+    "genero": "Drama",
+    "tags": ["holocausto", "amizade", "infantil"],
+    "descricao": "A amizade improvável entre dois meninos durante a Segunda Guerra Mundial."
+  },
+  {
+    "titulo": "O Senhor das Moscas",
+    "autor": "William Golding",
+    "genero": "Ficção",
+    "tags": ["sociedade", "infância", "sobrevivência"],
+    "descricao": "Meninos isolados em uma ilha tentam criar sua própria sociedade."
+  },
+  {
+    "titulo": "O Pêndulo de Foucault",
+    "autor": "Umberto Eco",
+    "genero": "Mistério",
+    "tags": ["conspiração", "história", "filosofia"],
+    "descricao": "Três editores se envolvem em uma trama de sociedades secretas e enigmas históricos."
+  },
+  {
+    "titulo": "O Idiota",
+    "autor": "Fiódor Dostoiévski",
+    "genero": "Romance",
+    "tags": ["Rússia", "psicologia", "clássico"],
+    "descricao": "O príncipe Míchkin retorna à Rússia e enfrenta a hipocrisia da sociedade."
+  },
+  {
+    "titulo": "O Vermelho e o Negro",
+    "autor": "Stendhal",
+    "genero": "Romance",
+    "tags": ["ambição", "sociedade", "clássico"],
+    "descricao": "A ascensão social de Julien Sorel na França do século XIX."
+  },
+  {
+    "titulo": "O Jogador",
+    "autor": "Fiódor Dostoiévski",
+    "genero": "Drama",
+    "tags": ["jogo", "obsessão", "psicologia"],
+    "descricao": "A paixão destrutiva de um homem pela roleta."
+  },
+  {
+    "titulo": "O Curioso Caso de Benjamin Button",
+    "autor": "F. Scott Fitzgerald",
+    "genero": "Ficção",
+    "tags": ["tempo", "fantasia", "clássico"],
+    "descricao": "A vida de um homem que nasce velho e rejuvenesce com o tempo."
+  },
+  {
+    "titulo": "O Homem Duplicado",
+    "autor": "José Saramago",
+    "genero": "Ficção",
+    "tags": ["identidade", "mistério", "filosofia"],
+    "descricao": "Um professor descobre que existe alguém idêntico a ele."
+  },
+  {
+    "titulo": "O Segredo",
+    "autor": "Rhonda Byrne",
+    "genero": "Autoajuda",
+    "tags": ["motivação", "lei da atração", "sucesso"],
+    "descricao": "O poder do pensamento positivo para transformar a vida."
+  },
+  {
+    "titulo": "O Pequeno Nicolau Vai à Escola",
+    "autor": "René Goscinny",
+    "genero": "Infantil",
+    "tags": ["humor", "escola", "amizade"],
+    "descricao": "Mais aventuras do Nicolau e seus amigos na escola."
+  },
+  {
+    "titulo": "O Alienista",
+    "autor": "Machado de Assis",
+    "genero": "Sátira",
+    "tags": ["psicologia", "sociedade", "brasileiro"],
+    "descricao": "O Dr. Simão Bacamarte decide internar toda a cidade em seu hospício."
+  },
+  {
+    "titulo": "O Quinze",
+    "autor": "Rachel de Queiroz",
+    "genero": "Romance Regionalista",
+    "tags": ["seca", "nordeste", "brasileiro"],
+    "descricao": "A seca de 1915 no Ceará e seus impactos na vida das pessoas."
+  },
+  {
+    "titulo": "O Ateneu",
+    "autor": "Raul Pompeia",
+    "genero": "Romance de Formação",
+    "tags": ["educação", "infância", "brasileiro"],
+    "descricao": "A trajetória de Sérgio em um tradicional internato do Rio de Janeiro."
+  },
+  {
+    "titulo": "O Primo Basílio",
+    "autor": "Eça de Queirós",
+    "genero": "Romance Realista",
+    "tags": ["adultério", "sociedade", "Portugal"],
+    "descricao": "O caso extraconjugal de Luísa e seu primo Basílio em Lisboa."
+  },
+  {
+    "titulo": "O Cortiço",
+    "autor": "Aluísio Azevedo",
+    "genero": "Romance Naturalista",
+    "tags": ["Rio de Janeiro", "sociedade", "brasileiro"],
+    "descricao": "A vida dos moradores de um cortiço carioca no século XIX."
+  },
+  {
+    "titulo": "O Guarani",
+    "autor": "José de Alencar",
+    "genero": "Romance Indianista",
+    "tags": ["índios", "Brasil", "aventura"],
+    "descricao": "A história de amor entre Peri e Cecília no Brasil colonial."
+  },
+  {
+    "titulo": "O Seminarista",
+    "autor": "Bernardo Guimarães",
+    "genero": "Romance",
+    "tags": ["religião", "amor", "Brasil"],
+    "descricao": "Eugênio é forçado a seguir a carreira religiosa, mas se apaixona por Margarida."
+  },
+  {
+    "titulo": "O Mulato",
+    "autor": "Aluísio Azevedo",
+    "genero": "Romance Naturalista",
+    "tags": ["racismo", "sociedade", "Brasil"],
+    "descricao": "A luta de Raimundo contra o preconceito racial no Maranhão."
+  },
+  {
+    "titulo": "O Pagador de Promessas",
+    "autor": "Dias Gomes",
+    "genero": "Drama",
+    "tags": ["fé", "religião", "brasileiro"],
+    "descricao": "Zé do Burro carrega uma cruz até Salvador para pagar uma promessa."
+  },
+  {
+    "titulo": "O Auto da Compadecida",
+    "autor": "Ariano Suassuna",
+    "genero": "Comédia",
+    "tags": ["nordeste", "religião", "brasileiro"],
+    "descricao": "As aventuras de João Grilo e Chicó no sertão nordestino."
+  },
+  {
+    "titulo": "O Escaravelho do Diabo",
+    "autor": "Lúcia Machado de Almeida",
+    "genero": "Mistério Juvenil",
+    "tags": ["suspense", "infantil", "Brasil"],
+    "descricao": "Um jovem investiga assassinatos misteriosos em sua cidade."
+  },
+  {
+    "titulo": "O Menino Maluquinho",
+    "autor": "Ziraldo",
+    "genero": "Infantil",
+    "tags": ["humor", "infância", "brasileiro"],
+    "descricao": "As travessuras e imaginação de um menino muito especial."
+  },
+  {
+    "titulo": "O Sítio do Picapau Amarelo",
+    "autor": "Monteiro Lobato",
+    "genero": "Infantil",
+    "tags": ["fantasia", "aventura", "brasileiro"],
+    "descricao": "As aventuras de Emília, Narizinho e Pedrinho no sítio mágico."
+  },
+  {
+    "titulo": "O Alienista e Outros Contos",
+    "autor": "Machado de Assis",
+    "genero": "Contos",
+    "tags": ["psicologia", "sociedade", "brasileiro"],
+    "descricao": "Coletânea de contos clássicos do autor brasileiro."
+  },
+  {
+    "titulo": "O Livro dos Abraços",
+    "autor": "Eduardo Galeano",
+    "genero": "Crônicas",
+    "tags": ["América Latina", "poesia", "sociedade"],
+    "descricao": "Fragmentos poéticos e reflexivos sobre a vida e a história latino-americana."
+  },
+  {
+    "titulo": "O Pequeno Príncipe em Cordel",
+    "autor": "Josué Limeira",
+    "genero": "Fábula",
+    "tags": ["cordel", "infantil", "poesia"],
+    "descricao": "A clássica história do Pequeno Príncipe adaptada para a literatura de cordel."
+  }
+] 

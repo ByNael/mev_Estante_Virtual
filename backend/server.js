@@ -14,6 +14,7 @@ const ProgressoLeitura = require("./models/ProgressoLeitura")
 // Importar rotas
 const livroRoutes = require("./routes/livroRoutes")
 const progressoRoutes = require("./routes/progressoRoutes")
+const chatbotRoutes = require("./routes/chatbotRoutes")
 
 const app = express()
 const PORT = process.env.PORT || 5000
@@ -152,6 +153,7 @@ app.get("/api/user/profile", authenticateToken, async (req, res) => {
 // Usar rotas de livros e progresso
 app.use("/api/livros", livroRoutes)
 app.use("/api/progresso", progressoRoutes)
+app.use("/api/chatbot", chatbotRoutes)
 
 // Iniciar o servidor
 app.listen(PORT, () => {

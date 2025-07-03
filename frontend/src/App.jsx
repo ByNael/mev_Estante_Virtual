@@ -10,6 +10,7 @@ import LivroForm from "./components/livros/LivroForm"
 import ProgressoForm from "./components/progresso/ProgressoForm"
 import ProgressoList from "./components/progresso/ProgressoList"
 import Navbar from "./components/Navbar"
+import Chatbot from "./components/Chatbot"
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false)
@@ -96,6 +97,11 @@ function App() {
             <Route path="/" element={<Navigate to={isAuthenticated ? "/dashboard" : "/login"} />} />
           </Routes>
         </div>
+        {isAuthenticated && (
+          <div className="fixed bottom-4 right-4 z-50">
+            <Chatbot />
+          </div>
+        )}
       </div>
     </Router>
   )

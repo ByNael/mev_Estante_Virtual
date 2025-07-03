@@ -19,6 +19,7 @@
   "license": "MIT",
   "dependencies": {
     "mongoose": "^8.16.1",
-    "multer": "^2.0.1"
+    "multer": "^2.0.1",
+    "node-nlp": "^5.0.0-alpha.5"
   }
 }
